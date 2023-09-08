@@ -13,8 +13,8 @@ export const CoinTable = ({ data }) => {
 		</thead>
 		<tbody>
 			{
-				data.map((obj) => (
-					<tr>
+				data.map((obj, index) => (
+					<tr key={index}>
 						<td>{obj.rank}</td>
 						<td>
 							<img src={obj.icon} width={20} style={{marginRight: 10}} alt="Coin" />
