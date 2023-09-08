@@ -7,46 +7,31 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import './App.css'
+import { useQuery } from 'react-query';
+
+async function fetchCoins() {
+	const { data } = await axios.get(`https://api.coinstats.app/public/v1/coins?limit=20`);
+	return data.coins;
+}
 
 function App() {
-	const [coins, setCoins] = React.useState();
-	const [loading, setLoading] = React.useState(true);
-	const [error, setError] = React.useState(false);
+	const { data, isLoading, isError } = useQuery('coins', fetchCoins);
 
-	async function fetchCoins() {
-		try {
-			const { data } = await axios.get(`https://api.coinstats.app/public/v1/coins?limit=20`);
-			setCoins(data.coins);
-			console.log(data.coins);
-		} catch (error) {
-			console.error(error.message);
-			setError(true);
-		} finally {
-			setLoading(false);
-		}
-	}
-
-	React.useEffect(() => {
-		fetchCoins();
-	}, []);
-
-	if (loading) {
+	if (isLoading) {
 		return <h3>Loading...</h3>
 	}
 
-	if (error) {
+	if (isError) {
 		return <h3>Error fetch</h3>
 	}
 
-	if(!coins) {
+	if(!data) {
 		return <h3>Not data</h3>
 	}
 
-	
-
 	return (
 		<Container>
-			<CoinTable data={coins} />
+			<CoinTable data={data} />
 		</Container>
 	)
 }  
